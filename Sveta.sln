@@ -12,6 +12,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docker", "docker", "{EEAED6
 		..\..\.env = ..\..\.env
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Engine", "src\Engine\Engine.csproj", "{7F42FDDA-9CFA-47D2-8A6B-1BCBD203FDBC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,11 +21,16 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{0F8940D7-BD85-4891-8C68-FF3B3147818B} = {3D0D1DFE-DC93-456B-B033-C0D2C8D69C2A}
+		{7F42FDDA-9CFA-47D2-8A6B-1BCBD203FDBC} = {3D0D1DFE-DC93-456B-B033-C0D2C8D69C2A}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{0F8940D7-BD85-4891-8C68-FF3B3147818B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0F8940D7-BD85-4891-8C68-FF3B3147818B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0F8940D7-BD85-4891-8C68-FF3B3147818B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0F8940D7-BD85-4891-8C68-FF3B3147818B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F42FDDA-9CFA-47D2-8A6B-1BCBD203FDBC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F42FDDA-9CFA-47D2-8A6B-1BCBD203FDBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F42FDDA-9CFA-47D2-8A6B-1BCBD203FDBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F42FDDA-9CFA-47D2-8A6B-1BCBD203FDBC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

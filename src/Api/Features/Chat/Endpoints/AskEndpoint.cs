@@ -32,15 +32,18 @@ public class AskEndpoint()
         
         string promptTemplate = @"
 Répond à cette question en Français: {{$input}}
-Basé sur ces informations: {{TextMemory.Recall $input collection=""" + collection + @"""}}
+Basé sur ces informations: {{TextMemory.Recall $input collection=$collection limit=$limit relevance=$relevance}}
 Si les informations ne contiennent pas les informations pour y répondre, alors tu répondra en disant 'Je ne sais pas'
 ";
         
         var response = await kernel.InvokePromptAsync(
             promptTemplate,
-            new KernelArguments
+            new KernelArguments()
             {
-                ["input"] = request.Body.Question
+                { "input", request.Body.Question },
+                { "limit", 3 },
+                { "relevance", 0.7 },
+                { "collection", collection }
             }
         );
 
