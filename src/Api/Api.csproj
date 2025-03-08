@@ -10,24 +10,31 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.1"/>
-        <PackageReference Include="Microsoft.SemanticKernel" Version="1.40.1" />
-        <PackageReference Include="Microsoft.SemanticKernel.Abstractions" Version="1.40.1" />
-        <PackageReference Include="Microsoft.SemanticKernel.Connectors.Chroma" Version="1.40.1-alpha" />
-        <PackageReference Include="Microsoft.SemanticKernel.Connectors.HuggingFace" Version="1.40.1-preview" />
-        <PackageReference Include="Microsoft.SemanticKernel.Connectors.Redis" Version="1.40.1-preview" />
-        <PackageReference Include="Microsoft.SemanticKernel.Core" Version="1.40.1" />
-        <PackageReference Include="Microsoft.SemanticKernel.Plugins.Memory" Version="1.40.1-alpha" />
-        <PackageReference Include="Walfhand.QuickApi" Version="1.0.6" />
+        <PackageReference Include="Microsoft.SemanticKernel" Version="1.40.1"/>
+        <PackageReference Include="Microsoft.SemanticKernel.Abstractions" Version="1.40.1"/>
+        <PackageReference Include="Microsoft.SemanticKernel.Connectors.Chroma" Version="1.40.1-alpha"/>
+        <PackageReference Include="Microsoft.SemanticKernel.Connectors.HuggingFace" Version="1.40.1-preview"/>
+        <PackageReference Include="Microsoft.SemanticKernel.Connectors.Redis" Version="1.40.1-preview"/>
+        <PackageReference Include="Microsoft.SemanticKernel.Core" Version="1.40.1"/>
+        <PackageReference Include="Microsoft.SemanticKernel.Plugins.Memory" Version="1.40.1-alpha"/>
+        <PackageReference Include="Walfhand.QuickApi" Version="1.0.6"/>
     </ItemGroup>
 
     <ItemGroup>
-      <Content Include="..\..\.dockerignore">
-        <Link>.dockerignore</Link>
-      </Content>
+        <Content Include="..\..\.dockerignore">
+            <Link>.dockerignore</Link>
+        </Content>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Engine\Engine.csproj" />
+        <ProjectReference Include="..\Engine\Engine.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Folder Include="Features\Projects\Features\Conversations\CreateConversation\"/>
+        <Folder Include="Features\Projects\Features\CreateProject\"/>
+        <Folder Include="Features\Projects\Features\Documents\DeleteDocument\"/>
+        <Folder Include="Features\Projects\Features\Documents\GetDocuments\"/>
     </ItemGroup>
 
 </Project>

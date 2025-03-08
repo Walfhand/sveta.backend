@@ -2,12 +2,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.SemanticKernel;
 using QuickApi.Engine.Web.Endpoints.Impl;
 
-namespace Api.Features.Chat.Endpoints;
-
+namespace Api.Features.Projects.Features.Conversations.Ask.Endpoints;
 
 public record AskRequest
 {
     [FromBody] public AskRequestBody Body { get; set; } = null!;
+
     public record AskRequestBody
     {
         public string Question { get; set; } = null!;
@@ -17,28 +17,27 @@ public record AskRequest
 
 public record AskResponse
 {
-    
 }
 
-
 public class AskEndpoint()
-    : PostMinimalEndpoint<AskRequest, AskResponse>("chat/ask")
+    : PostMinimalEndpoint<AskRequest, AskResponse>("conversations/{id:guid}/ask")
 {
-    protected override Delegate Handler => Endpoint;
     private const string DefaultCollection = "api_knowledge_base";
+    protected override Delegate Handler => Endpoint;
+
     private static async Task<IResult> Endpoint([AsParameters] AskRequest request, Kernel kernel)
     {
-        string collection = string.IsNullOrEmpty(request.Body.Collection) ? DefaultCollection : request.Body.Collection;
-        
-        string promptTemplate = @"
+        var collection = string.IsNullOrEmpty(request.Body.Collection) ? DefaultCollection : request.Body.Collection;
+
+        var promptTemplate = @"
 Répond à cette question en Français: {{$input}}
 Basé sur ces informations: {{TextMemory.Recall $input collection=$collection limit=$limit relevance=$relevance}}
 Si les informations ne contiennent pas les informations pour y répondre, alors tu répondra en disant 'Je ne sais pas'
 ";
-        
+
         var response = await kernel.InvokePromptAsync(
             promptTemplate,
-            new KernelArguments()
+            new KernelArguments
             {
                 { "input", request.Body.Question },
                 { "limit", 3 },
@@ -47,6 +46,6 @@ Si les informations ne contiennent pas les informations pour y répondre, alors 
             }
         );
 
-        return Results.Ok(new { answer = response.ToString()});
+        return Results.Ok(new { answer = response.ToString() });
     }
 }
