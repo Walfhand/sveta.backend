@@ -38,7 +38,6 @@
 
     <ItemGroup>
         <Folder Include="Data\Migrations\"/>
-        <Folder Include="Features\Projects\Features\Conversations\CreateConversation\"/>
         <Folder Include="Features\Projects\Features\Documents\DeleteDocument\"/>
         <Folder Include="Features\Projects\Features\Documents\GetDocuments\"/>
     </ItemGroup>

@@ -43,9 +43,16 @@ public class Project : AggregateRoot<ProjectId>
         _documents.Add(Document.Create(name, content, contentType));
     }
 
-    public void StartNewConversation(string collection)
+    public Conversation StartNewConversation()
     {
-        _conversations.Add(Conversation.Create(collection));
+        var conversation = Conversation.Create("");
+        _conversations.Add(conversation);
+        return conversation;
+    }
+
+    public Conversation GetConversation(ConversationId id)
+    {
+        return _conversations.Single(x => x.Id == id);
     }
 
     public static Project Create(string name, string description)

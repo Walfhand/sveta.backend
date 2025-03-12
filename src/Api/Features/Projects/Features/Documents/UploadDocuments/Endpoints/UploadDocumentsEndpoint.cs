@@ -67,7 +67,7 @@ public class SaveDocumentsRequestHandler(IAppDbContextFactory dbContextFactory, 
             {
                 Key = $"{document.Id}_c{chunkIndex}",
                 DocumentName = document.Name,
-                ChunkNumber = (chunkIndex + 1).ToString(),
+                ChunkNumber = chunkIndex,
                 Text = lines[chunkIndex]
             };
             documentChunks.Add(chunk);

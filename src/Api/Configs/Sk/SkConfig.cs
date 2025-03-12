@@ -16,7 +16,7 @@ public static class SkConfig
         services.Configure<SkOptions>(configuration.GetSection(SkOptions.Sk));
         var skOptions = configuration.GetSection(SkOptions.Sk).Get<SkOptions>();
 
-        services.AddOpenAIChatCompletion("meta-llama/Llama-3.2-90B-Vision-Instruct",
+        services.AddOpenAIChatCompletion("deepseek-ai/DeepSeek-R1-Distill-Llama-70B",
             new Uri(skOptions!.Uri),
             skOptions.ApiKey);
 

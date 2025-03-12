@@ -13,7 +13,7 @@ public class DocumentChunk
 
     [TextSearchResultLink]
     [VectorStoreRecordData]
-    public required string ChunkNumber { get; init; }
+    public required int ChunkNumber { get; init; }
 
     [VectorStoreRecordData]
     [TextSearchResultValue]
