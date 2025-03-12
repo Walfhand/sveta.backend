@@ -1,9 +1,6 @@
 using Api.Configs.Sk.Options;
+using Api.Features.Projects.Features.Documents.UploadDocuments.Services;
 using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.Connectors.Redis;
-using Microsoft.SemanticKernel.Embeddings;
-using Microsoft.SemanticKernel.Memory;
-using Microsoft.SemanticKernel.Plugins.Memory;
 
 namespace Api.Configs.Sk;
 
@@ -18,45 +15,27 @@ public static class SkConfig
     {
         services.Configure<SkOptions>(configuration.GetSection(SkOptions.Sk));
         var skOptions = configuration.GetSection(SkOptions.Sk).Get<SkOptions>();
-        
-        services.AddOpenAIChatCompletion(modelId: "ozone-ai/0x-lite",
-            endpoint: new Uri(skOptions!.Uri),
-            apiKey: skOptions.ApiKey);
 
-        services.AddHuggingFaceTextEmbeddingGeneration(endpoint: new Uri(skOptions.EmbeddingUri));
-        
-        services.AddSingleton<IMemoryStore>(sp => 
-            new RedisMemoryStore(skOptions.StoreUri, vectorSize: 1024)
-        );
+        services.AddOpenAIChatCompletion("meta-llama/Llama-3.2-90B-Vision-Instruct",
+            new Uri(skOptions!.Uri),
+            skOptions.ApiKey);
 
-        services.AddSingleton<ISemanticTextMemory>(sp =>
-        {
-            var memoryStore = sp.GetRequiredService<IMemoryStore>();
-            var embeddingService = sp.GetRequiredService<ITextEmbeddingGenerationService>();
-    
-            return new SemanticTextMemory(memoryStore, embeddingService);
-        });
-        
-        services.AddSingleton(sp =>
-        {
-            var memoryStore = sp.GetRequiredService<IMemoryStore>();
-            
-            var embeddingService = sp.GetRequiredService<ITextEmbeddingGenerationService>();
-            var semanticTextMemory = new SemanticTextMemory(memoryStore, embeddingService);
-            
-            return new TextMemoryPlugin(semanticTextMemory);
-        });
-        
-        services.AddSingleton<KernelPluginCollection>((serviceProvider) => 
+        services.AddRedisVectorStore(skOptions.StoreUri);
+        services.AddHuggingFaceTextEmbeddingGeneration(new Uri(skOptions.EmbeddingUri));
+
+        services.AddSingleton<KernelPluginCollection>(serviceProvider =>
             [
-                KernelPluginFactory.CreateFromObject(serviceProvider.GetRequiredService<TextMemoryPlugin>(), "TextMemory"),
             ]
         );
-        
-        services.AddTransient((serviceProvider)=> {
+
+        services.AddTransient(serviceProvider =>
+        {
             var pluginCollection = serviceProvider.GetRequiredService<KernelPluginCollection>();
             return new Kernel(serviceProvider, pluginCollection);
         });
+
+        services.AddScoped<DocumentUploader>();
+        services.AddHttpContextAccessor();
         return services;
     }
 }

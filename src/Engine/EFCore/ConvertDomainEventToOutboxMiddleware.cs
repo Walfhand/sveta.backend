@@ -1,5 +1,6 @@
 using Engine.Core.Events;
 using Engine.Core.Models;
+using Engine.Wolverine.Factory;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Wolverine;
@@ -7,18 +8,16 @@ using Wolverine.EntityFrameworkCore;
 
 namespace Engine.EFCore;
 
-public class ConvertDomainEventToOutboxMiddleware(RequestDelegate next)
+public class ConvertDomainEventToOutboxMiddleware
 {
-    public async Task InvokeAsync(HttpContext httpContext,
-        IDbContext context,
+    public async Task After(IAppDbContextFactory dbContextFactory, IDbContextOutbox outbox, IMessageBus messageBus,
         IEventMapper eventMapper,
-        IDbContextOutbox outbox,
-        IMessageBus messageBus)
+        IHttpContextAccessor contextAccessor)
     {
-        await next(httpContext);
-        if (httpContext.Request.Method == "GET")
+        if (contextAccessor.HttpContext!.Request.Method == "GET")
             return;
-        if (context is AppDbContextBase dbContext)
+
+        if (dbContextFactory.CreateDbContext() is AppDbContextBase dbContext)
         {
             outbox.Enroll(dbContext);
 

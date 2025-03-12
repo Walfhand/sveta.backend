@@ -18,6 +18,7 @@ public record ProjectId : IdBase
 public class Project : AggregateRoot<ProjectId>
 {
     private readonly List<Conversation> _conversations = [];
+    private readonly List<Document> _documents = [];
 
     private Project()
     {
@@ -33,8 +34,14 @@ public class Project : AggregateRoot<ProjectId>
     public string Description { get; private set; } = null!;
     public GithubUrl? GithubUrl { get; private set; }
 
-    public List<Document> Documents { get; private set; } = [];
+
     public IReadOnlyCollection<Conversation> Conversations => _conversations.AsReadOnly();
+    public IReadOnlyCollection<Document> Documents => _documents.AsReadOnly();
+
+    public void AddDocument(string name, byte[] content, string contentType)
+    {
+        _documents.Add(Document.Create(name, content, contentType));
+    }
 
     public void StartNewConversation(string collection)
     {

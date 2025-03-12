@@ -5,18 +5,21 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
     </PropertyGroup>
-    
+
     <ItemGroup>
         <FrameworkReference Include="Microsoft.AspNetCore.App"/>
     </ItemGroup>
-    
+
     <ItemGroup>
-      <PackageReference Include="EFCore.NamingConventions" Version="9.0.0" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.2" />
-      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
-      <PackageReference Include="Walfhand.QuickApi" Version="1.0.6" />
-      <PackageReference Include="WolverineFx" Version="3.10.2" />
-      <PackageReference Include="WolverineFx.EntityFrameworkCore" Version="3.10.2" />
+        <PackageReference Include="EFCore.NamingConventions" Version="9.0.0"/>
+        <PackageReference Include="Hellang.Middleware.ProblemDetails" Version="6.5.1"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.2"/>
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4"/>
+        <PackageReference Include="Walfhand.QuickApi" Version="1.0.6"/>
+        <PackageReference Include="WolverineFx" Version="3.10.3"/>
+        <PackageReference Include="WolverineFx.EntityFrameworkCore" Version="3.10.3"/>
+        <PackageReference Include="WolverineFx.FluentValidation" Version="3.10.3"/>
+        <PackageReference Include="WolverineFx.Postgresql" Version="3.10.3"/>
     </ItemGroup>
 
 </Project>

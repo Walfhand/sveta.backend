@@ -40,6 +40,7 @@ public class Conversation : Entity<ConversationId>
 
     public void AddChatMessage(string role, string message)
     {
-        _chatMessages.Add(new ChatMessage(role, message));
+        var lastOrder = _chatMessages.OrderBy(x => x.Order).LastOrDefault()?.Order ?? 0;
+        _chatMessages.Add(new ChatMessage(role, message, lastOrder + 1));
     }
 }

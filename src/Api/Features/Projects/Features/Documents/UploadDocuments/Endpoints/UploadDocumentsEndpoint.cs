@@ -1,55 +1,83 @@
+using Api.Features.Projects.Domain;
+using Api.Features.Projects.Domain.Entities;
+using Api.Features.Projects.Features.Documents.ChunkDocument.Models;
+using Api.Features.Projects.Features.Documents.UploadDocuments.Services;
+using Api.Services;
+using Engine.Exceptions;
+using Engine.Wolverine;
+using Engine.Wolverine.Factory;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.Memory;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.SemanticKernel.Text;
 using QuickApi.Engine.Web.Endpoints.Impl;
 
 namespace Api.Features.Projects.Features.Documents.UploadDocuments.Endpoints;
 
 #pragma warning disable SKEXP0001
+#pragma warning disable SKEXP0050
 public class SaveDocumentsRequest
 {
-    [FromBody] public SaveMomoryRequestBody Body { get; set; } = null!;
+    [FromForm] public IFormFile File { get; set; } = null!;
+    [FromRoute] public Guid Id { get; set; }
 
-    public record SaveMomoryRequestBody
+    public record SaveDocumentsRequestBody
     {
-        public string Id { get; set; } = null!;
-        public string Text { get; set; } = null!;
-        public string Description { get; set; } = null!;
-        public string Collection { get; set; } = null!;
+        public IFormFile File { get; set; } = null!;
     }
 }
 
 public record SaveDocumentsResponse
 {
+    public string Message { get; set; } = null!;
 }
 
 public class UploadDocumentsEndpoint()
     : PostMinimalEndpoint<SaveDocumentsRequest, SaveDocumentsResponse>("projects/{id:guid}/documents")
 {
-    private const string DefaultCollection = "api_knowledge_base";
-    protected override Delegate Handler => Endpoint;
-
-    private static async Task<IResult> Endpoint([AsParameters] SaveDocumentsRequest request, Kernel kernel,
-        ISemanticTextMemory memory, CancellationToken ct)
+    protected override RouteHandlerBuilder Configure(IEndpointRouteBuilder builder)
     {
-        try
-        {
-            var collection = string.IsNullOrEmpty(request.Body.Collection)
-                ? DefaultCollection
-                : request.Body.Collection;
-            await memory.SaveInformationAsync(
-                collection,
-                id: request.Body.Id,
-                text: request.Body.Text,
-                description: request.Body.Description,
-                cancellationToken: ct
-            );
+        var test = base.Configure(builder);
+        test.DisableAntiforgery();
+        return test;
+    }
+}
 
-            return Results.Ok(new { message = "Information saved successfully" });
-        }
-        catch (Exception ex)
+public class SaveDocumentsRequestHandler(IAppDbContextFactory dbContextFactory, IHttpContextAccessor contextAccessor)
+    : Handler(dbContextFactory, contextAccessor)
+{
+    public async Task<SaveDocumentsResponse> Handle(SaveDocumentsRequest request,
+        PdfContentExtractor pdfExtractor, DocumentUploader documentUploader, CancellationToken ct)
+    {
+        var project = await DbContext.Set<Project>().FirstOrDefaultAsync(x => x.Id == request.Id, ct);
+        if (project is null)
+            throw project.NotFound(new ProjectId(request.Id));
+
+        using var stream = new MemoryStream();
+        await request.File.CopyToAsync(stream, ct);
+        var fileBytes = stream.ToArray();
+        var document = Document.Create(request.File.FileName, fileBytes, request.File.ContentType);
+        var pdfContent = pdfExtractor.ExtractContent(fileBytes);
+
+        var documentChunks = new List<DocumentChunk>();
+
+        var lines = TextChunker.SplitPlainTextLines(pdfContent.Text, 150);
+        for (var chunkIndex = 0; chunkIndex < lines.Count; chunkIndex++)
         {
-            return Results.InternalServerError(ex.Message);
+            var chunk = new DocumentChunk
+            {
+                Key = $"{document.Id}_c{chunkIndex}",
+                DocumentName = document.Name,
+                ChunkNumber = (chunkIndex + 1).ToString(),
+                Text = lines[chunkIndex]
+            };
+            documentChunks.Add(chunk);
         }
+
+        await documentUploader.UploadDocumentChunks(project.Id.Value.ToString(), documentChunks);
+
+        return new SaveDocumentsResponse
+        {
+            Message = "Ok"
+        };
     }
 }
