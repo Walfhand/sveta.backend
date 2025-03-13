@@ -1,4 +1,5 @@
 using Api.Configs.Sk.Options;
+using Api.Features.Projects.Features.Conversations.Agents;
 using Api.Features.Projects.Features.Documents.UploadDocuments.Services;
 using Microsoft.SemanticKernel;
 
@@ -16,9 +17,15 @@ public static class SkConfig
         services.Configure<SkOptions>(configuration.GetSection(SkOptions.Sk));
         var skOptions = configuration.GetSection(SkOptions.Sk).Get<SkOptions>();
 
-        services.AddOpenAIChatCompletion("deepseek-ai/DeepSeek-R1-Distill-Llama-70B",
+        services.AddOpenAIChatCompletion("microsoft/phi-4",
             new Uri(skOptions!.Uri),
-            skOptions.ApiKey);
+            skOptions.ApiKey,
+            serviceId: "business");
+
+        services.AddOpenAIChatCompletion("ozone-ai/0x-lite",
+            new Uri(skOptions!.Uri),
+            skOptions.ApiKey,
+            serviceId: "decision");
 
         services.AddRedisVectorStore(skOptions.StoreUri);
         services.AddHuggingFaceTextEmbeddingGeneration(new Uri(skOptions.EmbeddingUri));
@@ -35,6 +42,8 @@ public static class SkConfig
         });
 
         services.AddScoped<DocumentUploader>();
+        services.AddSingleton<BusinessAgent>();
+        services.AddSingleton<DecisionAgent>();
         services.AddHttpContextAccessor();
         return services;
     }
