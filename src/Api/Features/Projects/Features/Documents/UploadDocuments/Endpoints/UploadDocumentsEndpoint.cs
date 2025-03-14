@@ -1,7 +1,7 @@
 using Api.Features.Projects.Domain;
 using Api.Features.Projects.Domain.Entities;
 using Api.Features.Projects.Features.Documents.ChunkDocument.Models;
-using Api.Features.Projects.Features.Documents.UploadDocuments.Services;
+using Api.Rag.Abstractions;
 using Api.Services;
 using Engine.Exceptions;
 using Engine.Wolverine;
@@ -46,7 +46,7 @@ public class SaveDocumentsRequestHandler(IAppDbContextFactory dbContextFactory, 
     : Handler(dbContextFactory, contextAccessor)
 {
     public async Task<SaveDocumentsResponse> Handle(SaveDocumentsRequest request,
-        PdfContentExtractor pdfExtractor, DocumentUploader documentUploader, CancellationToken ct)
+        PdfContentExtractor pdfExtractor, IRagWrite ragWrite, CancellationToken ct)
     {
         var project = await DbContext.Set<Project>().FirstOrDefaultAsync(x => x.Id == request.Id, ct);
         if (project is null)
@@ -73,7 +73,7 @@ public class SaveDocumentsRequestHandler(IAppDbContextFactory dbContextFactory, 
             documentChunks.Add(chunk);
         }
 
-        await documentUploader.UploadDocumentChunks(project.Id.Value.ToString(), documentChunks);
+        await ragWrite.WriteAsync(project.Id.Value.ToString(), documentChunks, ct);
 
         return new SaveDocumentsResponse
         {

@@ -1,6 +1,7 @@
 using Api.Configs.Sk.Options;
 using Api.Features.Projects.Features.Conversations.Agents;
-using Api.Features.Projects.Features.Documents.UploadDocuments.Services;
+using Api.Rag.Abstractions;
+using Api.Rag.Implementations;
 using Microsoft.SemanticKernel;
 
 namespace Api.Configs.Sk;
@@ -22,6 +23,11 @@ public static class SkConfig
             skOptions.ApiKey,
             serviceId: "business");
 
+        services.AddOpenAIChatCompletion("Qwen/Qwen2.5-Coder-32B-Instruct",
+            new Uri(skOptions!.Uri),
+            skOptions.ApiKey,
+            serviceId: "code");
+
         services.AddOpenAIChatCompletion("ozone-ai/0x-lite",
             new Uri(skOptions!.Uri),
             skOptions.ApiKey,
@@ -41,9 +47,13 @@ public static class SkConfig
             return new Kernel(serviceProvider, pluginCollection);
         });
 
-        services.AddScoped<DocumentUploader>();
         services.AddSingleton<BusinessAgent>();
+        services.AddSingleton<OnboardingAgent>();
+        services.AddSingleton<CodeAgent>();
         services.AddSingleton<DecisionAgent>();
+
+        services.AddSingleton<IRagRead, RagService>();
+        services.AddSingleton<IRagWrite, RagService>();
         services.AddHttpContextAccessor();
         return services;
     }

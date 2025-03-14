@@ -6,14 +6,17 @@ namespace Api.Features.Projects.Features.Conversations.Agents;
 
 public class DecisionAgent(
     [FromKeyedServices("decision")] IChatCompletionService chatCompletionService,
-    BusinessAgent businessAgent)
+    BusinessAgent businessAgent,
+    OnboardingAgent onboardingAgent,
+    CodeAgent codeAgent)
 {
-    private static Dictionary<string, string> AvailableAgents()
+    private Dictionary<string, string> AvailableAgents()
     {
         return new Dictionary<string, string>
         {
-            { nameof(BusinessAgent), BusinessAgent.Description },
-            { nameof(OnboardingAgent), OnboardingAgent.Description }
+            { nameof(BusinessAgent), businessAgent.Description },
+            { nameof(OnboardingAgent), onboardingAgent.Description },
+            { nameof(CodeAgent), codeAgent.Description }
         };
     }
 
@@ -29,7 +32,10 @@ public class DecisionAgent(
         {
             nameof(BusinessAgent) =>
                 await businessAgent.AnswerAsync(projectId, projectName, question, conversation, ct),
-            _ => throw new NotImplementedException()
+            nameof(OnboardingAgent) => await onboardingAgent.AnswerAsync(projectId, projectName, question, conversation,
+                ct),
+            nameof(CodeAgent) => await codeAgent.AnswerAsync(projectId, projectName, question, conversation, ct),
+            _ => throw new ArgumentOutOfRangeException()
         };
     }
 

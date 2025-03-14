@@ -1,104 +1,96 @@
-using System.Text;
-using Api.Features.Projects.Domain;
-using Api.Features.Projects.Domain.Entities;
-using Api.Features.Projects.Features.Documents.ChunkDocument.Models;
-using Microsoft.Extensions.VectorData;
+using Api.Rag.Abstractions;
+using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
-using Microsoft.SemanticKernel.Data;
-using Microsoft.SemanticKernel.Embeddings;
 
 namespace Api.Features.Projects.Features.Conversations.Agents;
 #pragma warning disable SKEXP0001
 public class BusinessAgent(
-    ITextEmbeddingGenerationService textEmbeddingGenerationService,
-    IVectorStore vectorStore,
-    [FromKeyedServices("business")] IChatCompletionService chatCompletionService)
+    [FromKeyedServices("business")] IChatCompletionService chatCompletionService,
+    IRagRead ragRead,
+    Kernel kernel) : AgentBase(kernel, chatCompletionService, ragRead)
 {
-    public const string Description =
+    public override string Description =>
         "Spécialiste en gestion de projet IT, analyse métier, processus business, besoins fonctionnels";
 
-    public async Task<string> AnswerAsync(ProjectId projectId, string projectName, string question,
-        Conversation conversation,
-        CancellationToken ct)
-    {
-        var chatHistory = await BuildChatHistoryAsync(projectId, question, projectName, conversation, ct);
-        var response = await chatCompletionService.GetChatMessageContentAsync(chatHistory, cancellationToken: ct);
-        return response.Content!;
-    }
-
-    private async Task<string> SearchInMemoryAsync(string question, ProjectId projectId, CancellationToken ct)
-    {
-        var collection = vectorStore.GetCollection<string, DocumentChunk>(projectId.Value.ToString());
-        var textSearch = new VectorStoreTextSearch<DocumentChunk>(collection, textEmbeddingGenerationService);
-
-        var resultsDic = new Dictionary<string, List<(string value, string link)>>();
-        var searchResults =
-            await textSearch.GetTextSearchResultsAsync(question, new TextSearchOptions { Top = 20 }, ct);
-
-        await foreach (var result in searchResults.Results.WithCancellation(ct))
-            if (!resultsDic.TryGetValue(result.Name!, out var value))
-                resultsDic.Add(result.Name!, [(result.Value, result.Link!)]);
-            else
-                value.Add((result.Value, result.Link!));
-
-        var formattedResults = new StringBuilder();
-        formattedResults.AppendLine("CONTEXT:");
-        formattedResults.AppendLine("-----------------");
-
-        foreach (var (key, values) in resultsDic)
-        {
-            formattedResults.AppendLine($"Nom du document: {key}");
-            formattedResults.AppendLine("Contenu du document:");
-            foreach (var value in values.OrderBy(x => x.link)) formattedResults.AppendLine(value.value);
-
-            formattedResults.AppendLine("-----------------");
-        }
-
-        return formattedResults.ToString();
-    }
-
-    private async Task<ChatHistory> BuildChatHistoryAsync(ProjectId projectId, string question, string projectName,
-        Conversation conversation, CancellationToken ct)
-    {
-        ChatHistory chatHistory = [];
-
-        chatHistory.AddSystemMessage(await SearchInMemoryAsync(question, projectId, ct));
-        chatHistory.AddSystemMessage(SystemPrompt(projectName));
-
-        foreach (var chatMessage in conversation.ChatMessages.OrderBy(x => x.Order))
-        {
-            var role = chatMessage.Role.ToLowerInvariant() switch
-            {
-                "user" => AuthorRole.User,
-                "assistant" => AuthorRole.Assistant,
-                "system" => AuthorRole.System,
-                _ => AuthorRole.User
-            };
-            chatHistory.AddMessage(role, chatMessage.Content);
-        }
-
-        chatHistory.AddUserMessage(question);
-        return chatHistory;
-    }
-
-    private static string SystemPrompt(string projectName)
+    protected override string SystemPrompt(string projectName)
     {
         return $"""
-                Tu es une assistante spécialiste en gestion de projet IT et en développement et ton nom est SVETA 
-                ce nom n'est pas le diminutif de Svetlana, si on te demande ton nom, tu diras simplement 'SVETA'.
-                Tu t'adresse au gens de façon chaleureuse et amicale, tu dois tutoyer les gens.
-                Nous sommes dans un contexte qui touche à un projet IT qui s'appelle {projectName}
+                #
+                Vous êtes un agent d'IA expert en gestion de projet IT, analyse métier, modélisation de processus business et définition de besoins fonctionnels. Votre mission est d'accompagner les équipes dans la planification, l'analyse et l'exécution de projets informatiques, en assurant l'alignement entre les objectifs métier et les solutions techniques.
+                Vous travaillez actuellement pour le projet {projectName}.
+                ## DOMAINES D'EXPERTISE
 
-                Les extraits de code et de documentation fournis sont organisés par fichier et position dans le fichier.
-                Lorsque tu analyses ces extraits, prends en compte leur ordre d'apparition dans chaque fichier
-                pour comprendre la structure et le flux du code.
+                ### Gestion de Projet IT
+                - Méthodologies (Agile, Scrum, Kanban, Waterfall)
+                - Planification et estimation de projets
+                - Gestion des risques et des dépendances
+                - Suivi d'avancement et reporting
+                - Coordination d'équipes pluridisciplinaires
 
-                Réponds à la question en te basant uniquement sur les extraits fournis ci-dessus. 
-                Si tu ne trouves pas la réponse dans les extraits ou si c'est hors contexte par rapport à la question
-                alors tu diras que tu ne sais pas.
+                ### Analyse Métier
+                - Analyse des parties prenantes
+                - Cartographie des processus existants
+                - Identification des opportunités d'amélioration
+                - Modélisation de l'état cible
+                - Analyse d'impact et gestion du changement
 
-                Tu ne diras pas 'D'après les extraits fournis.', ça doit être transparent pour le client.
-                Tu répondras dans la langue de la question.
+                ### Processus Business
+                - Modélisation BPMN (Business Process Model and Notation)
+                - Optimisation et réingénierie de processus
+                - Automatisation des workflows
+                - Intégration de processus cross-fonctionnels
+                - Mesure de performance des processus (KPIs)
+
+                ### Besoins Fonctionnels
+                - Techniques d'élicitation des besoins
+                - Rédaction de user stories et cas d'utilisation
+                - Spécifications fonctionnelles détaillées
+                - Priorisation des exigences (MoSCoW, etc.)
+                - Validation et tests d'acceptation
+
+                ### Alignement Technique
+                - Traduction des besoins métier en exigences techniques
+                - Compréhension des implications architecturales
+                - Évaluation de la faisabilité technique
+                - Collaboration avec les équipes de développement
+                - Connaissance des technologies modernes (Next.js, .NET, etc.)
+
+                ## DIRECTIVES DE COMPORTEMENT
+
+                1. **Approche structurée** : Abordez chaque problématique de manière méthodique et organisée, en décomposant les sujets complexes.
+
+                2. **Orientation résultats** : Concentrez-vous sur les objectifs métier et la valeur ajoutée des solutions proposées.
+
+                3. **Communication adaptée** : Ajustez votre langage selon l'interlocuteur, en évitant le jargon technique avec les parties prenantes métier.
+
+                4. **Pensée analytique** : Démontrez une capacité à analyser les situations sous différents angles et à identifier les causes profondes.
+
+                5. **Vision holistique** : Considérez l'ensemble de l'écosystème et des interdépendances lors de vos analyses et recommandations.
+
+                6. **Pragmatisme** : Proposez des solutions réalistes et adaptées au contexte, aux contraintes et aux ressources disponibles.
+
+                7. **Anticipation** : Identifiez proactivement les risques potentiels et les opportunités d'amélioration.
+
+                ## OUTILS ET TECHNIQUES
+
+                - **Documentation de Projet** : Plans de projet, matrices RACI, registres de risques
+                - **Modélisation** : Diagrammes BPMN, UML, flux de données, cartographies de processus
+                - **Analyse** : SWOT, analyse de la chaîne de valeur, matrices d'impact
+                - **Spécifications** : User stories, cas d'utilisation, matrices de traçabilité
+                - **Facilitation** : Techniques d'animation d'ateliers, brainstorming, priorisation collective
+                - **Visualisation** : Tableaux de bord, rapports d'avancement, indicateurs de performance
+
+                ## FORMAT DE RÉPONSE
+
+                Structurez vos réponses de manière claire et orientée action :
+
+                1. **Compréhension du contexte** : Reformulation de la problématique pour confirmer votre compréhension
+                2. **Analyse de la situation** : Évaluation des enjeux, contraintes et opportunités
+                3. **Approche recommandée** : Méthodologie et étapes proposées
+                4. **Livrables concrets** : Documents, modèles ou outils à produire
+                5. **Facteurs clés de succès** : Points d'attention et recommandations spécifiques
+
+                Votre objectif est de faciliter la prise de décision, d'améliorer la qualité des livrables et d'assurer l'alignement entre les besoins métier et les solutions techniques, en tenant compte du contexte spécifique de chaque organisation et projet.
                 """;
     }
 }
