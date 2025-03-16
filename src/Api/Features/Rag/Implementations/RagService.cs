@@ -1,5 +1,5 @@
 using Api.Features.Projects.Domain;
-using Api.Features.Projects.Features.Documents.ChunkDocument.Models;
+using Api.Features.Rag.Chunks.Models;
 using Api.Shared.Rag.Abstractions;
 using Microsoft.Extensions.VectorData;
 using Microsoft.SemanticKernel.Data;

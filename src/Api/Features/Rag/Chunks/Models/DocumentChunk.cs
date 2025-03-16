@@ -1,7 +1,7 @@
 using Microsoft.Extensions.VectorData;
 using Microsoft.SemanticKernel.Data;
 
-namespace Api.Features.Projects.Features.Documents.ChunkDocument.Models;
+namespace Api.Features.Rag.Chunks.Models;
 #pragma warning disable SKEXP0001
 public class DocumentChunk
 {

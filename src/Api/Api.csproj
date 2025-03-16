@@ -40,6 +40,7 @@
         <Folder Include="Data\Migrations\"/>
         <Folder Include="Features\Projects\Features\Documents\DeleteDocument\"/>
         <Folder Include="Features\Projects\Features\Documents\GetDocuments\"/>
+        <Folder Include="Features\Rag\Chunks\" />
     </ItemGroup>
 
 </Project>

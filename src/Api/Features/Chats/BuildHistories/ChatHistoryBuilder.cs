@@ -1,7 +1,7 @@
 using Api.Features.Projects.Domain.Entities;
 using Microsoft.SemanticKernel.ChatCompletion;
 
-namespace Api.Features.Projects.Features.Conversations.BuildHistories;
+namespace Api.Features.Chats.BuildHistories;
 
 public static class ChatHistoryBuilder
 {

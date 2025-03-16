@@ -1,13 +1,13 @@
+using Api.Features.Chats.Agents;
 using Api.Features.Projects.Domain;
 using Api.Features.Projects.Domain.Entities;
-using Api.Features.Projects.Features.Conversations.Agents;
 using Engine.Wolverine;
 using Engine.Wolverine.Factory;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using QuickApi.Engine.Web.Endpoints.Impl;
 
-namespace Api.Features.Projects.Features.Conversations.Ask.Endpoints;
+namespace Api.Features.Chats.Ask.Endpoints;
 #pragma warning disable SKEXP0001
 public record AskRequest
 {

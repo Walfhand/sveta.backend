@@ -1,5 +1,5 @@
+using Api.Features.Chats.CreateConversation.Results;
 using Api.Features.Projects.Domain;
-using Api.Features.Projects.Features.Conversations.CreateConversation.Results;
 using Engine.Exceptions;
 using Engine.Wolverine;
 using Engine.Wolverine.Factory;
@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using QuickApi.Engine.Web.Endpoints.Impl;
 
-namespace Api.Features.Projects.Features.Conversations.CreateConversation.Endpoints;
+namespace Api.Features.Chats.CreateConversation.Endpoints;
 
 public record CreateConversationRequest
 {

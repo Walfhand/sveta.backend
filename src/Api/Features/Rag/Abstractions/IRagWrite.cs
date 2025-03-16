@@ -1,4 +1,4 @@
-using Api.Features.Projects.Features.Documents.ChunkDocument.Models;
+using Api.Features.Rag.Chunks.Models;
 
 namespace Api.Shared.Rag.Abstractions;
 

@@ -2,7 +2,7 @@ using Api.Shared.Rag.Abstractions;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 
-namespace Api.Features.Projects.Features.Conversations.Agents;
+namespace Api.Features.Chats.Agents;
 #pragma warning disable SKEXP0001
 public class BusinessAgent(
     [FromKeyedServices("business")] IChatCompletionService chatCompletionService,

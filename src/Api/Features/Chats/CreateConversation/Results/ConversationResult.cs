@@ -1,6 +1,6 @@
 using Api.Features.Projects.Domain.Entities;
 
-namespace Api.Features.Projects.Features.Conversations.CreateConversation.Results;
+namespace Api.Features.Chats.CreateConversation.Results;
 
 public record ConversationResult(Guid Id, string Collection, string Title);
 

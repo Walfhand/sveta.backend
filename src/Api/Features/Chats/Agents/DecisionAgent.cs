@@ -2,7 +2,7 @@ using Api.Features.Projects.Domain;
 using Api.Features.Projects.Domain.Entities;
 using Microsoft.SemanticKernel.ChatCompletion;
 
-namespace Api.Features.Projects.Features.Conversations.Agents;
+namespace Api.Features.Chats.Agents;
 
 public class DecisionAgent(
     [FromKeyedServices("decision")] IChatCompletionService chatCompletionService,

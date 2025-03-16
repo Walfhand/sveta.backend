@@ -1,6 +1,6 @@
 using Api.Features.Projects.Domain;
 using Api.Features.Projects.Domain.Entities;
-using Api.Features.Projects.Features.Documents.ChunkDocument.Models;
+using Api.Features.Rag.Chunks.Models;
 using Api.Shared.Files;
 using Api.Shared.Rag.Abstractions;
 using Engine.Exceptions;
@@ -36,9 +36,9 @@ public class UploadDocumentsEndpoint()
 {
     protected override RouteHandlerBuilder Configure(IEndpointRouteBuilder builder)
     {
-        var test = base.Configure(builder);
-        test.DisableAntiforgery();
-        return test;
+        var routeBuilder = base.Configure(builder);
+        routeBuilder.DisableAntiforgery();
+        return routeBuilder;
     }
 }
 

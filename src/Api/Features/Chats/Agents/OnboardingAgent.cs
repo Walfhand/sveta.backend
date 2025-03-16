@@ -2,7 +2,7 @@ using Api.Shared.Rag.Abstractions;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 
-namespace Api.Features.Projects.Features.Conversations.Agents;
+namespace Api.Features.Chats.Agents;
 
 public class OnboardingAgent(
     Kernel kernel,
