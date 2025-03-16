@@ -1,5 +1,6 @@
-using Api.Integrations;
-using Api.Services;
+using Api.Configs.Cqrs;
+using Api.Shared.Files;
+using Api.Shared.Integrations;
 using Engine.Core.Events;
 using Engine.ProblemDetails;
 using QuickApi.Abstractions.Cqrs;
@@ -13,8 +14,6 @@ public static class ApplicationConfig
         services.AddScoped<IMessage, MessageService>();
         services.AddScoped<IEventMapper, EventMapper>();
         services.AddSingleton<PdfContentExtractor>();
-        services.AddSingleton<TextChunkingService>(sp =>
-            new TextChunkingService());
         services.AddCustomProblemDetails();
         return services;
     }

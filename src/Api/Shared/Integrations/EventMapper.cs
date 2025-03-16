@@ -1,6 +1,6 @@
 using Engine.Core.Events;
 
-namespace Api.Integrations;
+namespace Api.Shared.Integrations;
 
 public class EventMapper : IEventMapper
 {

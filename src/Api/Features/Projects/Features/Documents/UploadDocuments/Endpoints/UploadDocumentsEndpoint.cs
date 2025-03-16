@@ -1,8 +1,8 @@
 using Api.Features.Projects.Domain;
 using Api.Features.Projects.Domain.Entities;
 using Api.Features.Projects.Features.Documents.ChunkDocument.Models;
-using Api.Rag.Abstractions;
-using Api.Services;
+using Api.Shared.Files;
+using Api.Shared.Rag.Abstractions;
 using Engine.Exceptions;
 using Engine.Wolverine;
 using Engine.Wolverine.Factory;

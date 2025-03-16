@@ -1,7 +1,7 @@
 using Wolverine;
 using IMessage = QuickApi.Abstractions.Cqrs.IMessage;
 
-namespace Api.Services;
+namespace Api.Configs.Cqrs;
 
 public class MessageService(IMessageBus messageBus) : IMessage
 {

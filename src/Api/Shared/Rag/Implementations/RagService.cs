@@ -1,11 +1,11 @@
 using Api.Features.Projects.Domain;
 using Api.Features.Projects.Features.Documents.ChunkDocument.Models;
-using Api.Rag.Abstractions;
+using Api.Shared.Rag.Abstractions;
 using Microsoft.Extensions.VectorData;
 using Microsoft.SemanticKernel.Data;
 using Microsoft.SemanticKernel.Embeddings;
 
-namespace Api.Rag.Implementations;
+namespace Api.Shared.Rag.Implementations;
 #pragma warning disable SKEXP0001
 public class RagService(IVectorStore vectorStore, ITextEmbeddingGenerationService embeddingGenerationService)
     : IRagRead, IRagWrite

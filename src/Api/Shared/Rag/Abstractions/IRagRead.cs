@@ -1,6 +1,6 @@
 using Api.Features.Projects.Domain;
 
-namespace Api.Rag.Abstractions;
+namespace Api.Shared.Rag.Abstractions;
 
 public interface IRagRead
 {

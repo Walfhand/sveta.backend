@@ -1,4 +1,4 @@
-namespace Api.Linq;
+namespace Api.Shared.Extensions.Linq;
 
 public static class AsyncEnumerableExtensions
 {

@@ -1,7 +1,7 @@
 using Api.Configs.Sk.Options;
 using Api.Features.Projects.Features.Conversations.Agents;
-using Api.Rag.Abstractions;
-using Api.Rag.Implementations;
+using Api.Shared.Rag.Abstractions;
+using Api.Shared.Rag.Implementations;
 using Microsoft.SemanticKernel;
 
 namespace Api.Configs.Sk;

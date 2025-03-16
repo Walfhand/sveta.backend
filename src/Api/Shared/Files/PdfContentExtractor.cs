@@ -1,6 +1,6 @@
 using UglyToad.PdfPig;
 
-namespace Api.Services;
+namespace Api.Shared.Files;
 
 public class PdfContentExtractor
 {

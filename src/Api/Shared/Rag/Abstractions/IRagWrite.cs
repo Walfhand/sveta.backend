@@ -1,6 +1,6 @@
 using Api.Features.Projects.Features.Documents.ChunkDocument.Models;
 
-namespace Api.Rag.Abstractions;
+namespace Api.Shared.Rag.Abstractions;
 
 public interface IRagWrite
 {
