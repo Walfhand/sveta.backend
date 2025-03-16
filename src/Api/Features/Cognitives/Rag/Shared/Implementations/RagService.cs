@@ -1,11 +1,11 @@
+using Api.Features.Cognitives.Rag.Shared.Abstractions;
+using Api.Features.Cognitives.Rag.Shared.Chunks.Models;
 using Api.Features.Projects.Domain;
-using Api.Features.Rag.Chunks.Models;
-using Api.Shared.Rag.Abstractions;
 using Microsoft.Extensions.VectorData;
 using Microsoft.SemanticKernel.Data;
 using Microsoft.SemanticKernel.Embeddings;
 
-namespace Api.Shared.Rag.Implementations;
+namespace Api.Features.Cognitives.Rag.Shared.Implementations;
 #pragma warning disable SKEXP0001
 public class RagService(IVectorStore vectorStore, ITextEmbeddingGenerationService embeddingGenerationService)
     : IRagRead, IRagWrite

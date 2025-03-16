@@ -38,9 +38,11 @@
 
     <ItemGroup>
         <Folder Include="Data\Migrations\"/>
+        <Folder Include="Features\Cognitives\"/>
+        <Folder Include="Features\Cognitives\Rag\Shared\"/>
+        <Folder Include="Features\Projects\Features\Conversations\"/>
         <Folder Include="Features\Projects\Features\Documents\DeleteDocument\"/>
         <Folder Include="Features\Projects\Features\Documents\GetDocuments\"/>
-        <Folder Include="Features\Rag\Chunks\" />
     </ItemGroup>
 
 </Project>

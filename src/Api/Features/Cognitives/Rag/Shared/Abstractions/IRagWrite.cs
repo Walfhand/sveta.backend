@@ -1,6 +1,6 @@
-using Api.Features.Rag.Chunks.Models;
+using Api.Features.Cognitives.Rag.Shared.Chunks.Models;
 
-namespace Api.Shared.Rag.Abstractions;
+namespace Api.Features.Cognitives.Rag.Shared.Abstractions;
 
 public interface IRagWrite
 {

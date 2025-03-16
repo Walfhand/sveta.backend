@@ -1,8 +1,8 @@
 using System.Text;
 using Api.Features.Chats.BuildHistories;
+using Api.Features.Cognitives.Rag.Shared.Abstractions;
 using Api.Features.Projects.Domain;
 using Api.Features.Projects.Domain.Entities;
-using Api.Shared.Rag.Abstractions;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Connectors.OpenAI;

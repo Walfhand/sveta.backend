@@ -1,7 +1,5 @@
 using Api.Configs.Sk.Options;
 using Api.Features.Chats.Agents;
-using Api.Shared.Rag.Abstractions;
-using Api.Shared.Rag.Implementations;
 using Microsoft.SemanticKernel;
 
 namespace Api.Configs.Sk;
@@ -51,9 +49,6 @@ public static class SkConfig
         services.AddSingleton<OnboardingAgent>();
         services.AddSingleton<CodeAgent>();
         services.AddSingleton<DecisionAgent>();
-
-        services.AddSingleton<IRagRead, RagService>();
-        services.AddSingleton<IRagWrite, RagService>();
         services.AddHttpContextAccessor();
         return services;
     }

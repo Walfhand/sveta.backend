@@ -1,5 +1,7 @@
 using Api.Features.Projects.Domain.Entities;
+using Api.Features.Projects.Domain.Events;
 using Api.Features.Projects.Domain.ValueObjects;
+using Api.Shared.Files.Extractors.Abstractions;
 using Engine.Core.Models;
 
 namespace Api.Features.Projects.Domain;
@@ -38,9 +40,13 @@ public class Project : AggregateRoot<ProjectId>
     public IReadOnlyCollection<Conversation> Conversations => _conversations.AsReadOnly();
     public IReadOnlyCollection<Document> Documents => _documents.AsReadOnly();
 
-    public void AddDocument(string name, byte[] content, string contentType)
+    public Document AddDocument(string name, byte[] content, IFileContentExtractor fileContentExtractor,
+        string contentType)
     {
-        _documents.Add(Document.Create(name, content, contentType));
+        var document = Document.Create(name, content, contentType);
+        _documents.Add(document);
+        AddDomainEvent(new DocumentCreatedEvent(document.Id, document.Name, fileContentExtractor.Extract(content)));
+        return document;
     }
 
     public Conversation StartNewConversation()

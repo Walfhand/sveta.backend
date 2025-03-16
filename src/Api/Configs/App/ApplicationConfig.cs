@@ -1,5 +1,6 @@
 using Api.Configs.Cqrs;
 using Api.Shared.Files;
+using Api.Shared.Files.Extractors.Implementations;
 using Api.Shared.Integrations;
 using Engine.Core.Events;
 using Engine.ProblemDetails;
@@ -13,7 +14,8 @@ public static class ApplicationConfig
     {
         services.AddScoped<IMessage, MessageService>();
         services.AddScoped<IEventMapper, EventMapper>();
-        services.AddSingleton<PdfContentExtractor>();
+        services.AddSingleton<PdfFileContentExtractor>();
+        services.AddFileExtractors();
         services.AddCustomProblemDetails();
         return services;
     }

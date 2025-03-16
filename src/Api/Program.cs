@@ -2,6 +2,7 @@ using System.Reflection;
 using Api.Configs.App;
 using Api.Configs.Sk;
 using Api.Data.Contexts;
+using Api.Features.Cognitives.Rag;
 using Engine.EFCore;
 using Engine.Wolverine;
 using Engine.Wolverine.Factory;
@@ -14,6 +15,8 @@ builder.Services.AddApplication();
 builder.Services.AddOpenApi();
 builder.Services.AddMinimalEndpoints();
 builder.Services.AddSk(builder.Configuration);
+
+builder.Services.AddCognitiveServices();
 
 builder.Services.AddCustomDbContext<AppDbContext>();
 builder.Services.AddScoped<IAppDbContextFactory, DbContextFactory>();

@@ -32,7 +32,8 @@ public class Document : Entity<DocumentId>
     public string ContentType { get; private set; } = null!;
 
 
-    public static Document Create(string name, byte[] content, string contentType)
+    public static Document Create(string name, byte[] content,
+        string contentType)
     {
         return new Document(name, CreateSha256Hash(content), contentType);
 

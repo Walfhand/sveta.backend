@@ -1,22 +1,21 @@
+using Api.Shared.Files.Extractors.Abstractions;
 using UglyToad.PdfPig;
 
-namespace Api.Shared.Files;
+namespace Api.Shared.Files.Extractors.Implementations;
 
-public class PdfContentExtractor
+public class PdfFileContentExtractor : IFileContentExtractor
 {
-    public PdfContent ExtractContent(byte[] pdfBytes)
+    public string Extract(byte[] content)
     {
         var result = new PdfContent();
 
-        using var document = PdfDocument.Open(pdfBytes);
+        using var document = PdfDocument.Open(content);
 
-        // Extraire le texte page par page
         foreach (var page in document.GetPages())
         {
             var pageText = page.Text;
             result.Pages.Add(pageText);
 
-            // Extraire les images de la page
             foreach (var image in page.GetImages())
             {
                 var imageContent = image.RawBytes.ToArray();
@@ -24,10 +23,9 @@ public class PdfContentExtractor
             }
         }
 
-        // Concaténer tout le texte
         result.Text = string.Join(" ", result.Pages);
 
-        return result;
+        return result.Text;
     }
 
     public record PdfContent

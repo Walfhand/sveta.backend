@@ -1,4 +1,4 @@
-using Api.Shared.Rag.Abstractions;
+using Api.Features.Cognitives.Rag.Shared.Abstractions;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 
