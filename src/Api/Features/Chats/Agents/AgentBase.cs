@@ -5,7 +5,6 @@ using Api.Features.Projects.Domain;
 using Api.Features.Projects.Domain.Entities;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
-using Microsoft.SemanticKernel.Connectors.OpenAI;
 
 namespace Api.Features.Chats.Agents;
 
@@ -21,11 +20,7 @@ public abstract class AgentBase(Kernel kernel, IChatCompletionService chatComple
         var chatHistory = conversation.BuildChatHistory(question, await ConstructContext(question, projectId, ct),
             SystemPrompt(projectName));
         var response =
-            await chatCompletionService.GetChatMessageContentAsync(chatHistory, kernel: kernel,
-                executionSettings: new OpenAIPromptExecutionSettings
-                {
-                    MaxTokens = 8000
-                }, cancellationToken: ct);
+            await chatCompletionService.GetChatMessageContentAsync(chatHistory, kernel: kernel, cancellationToken: ct);
 
         return response.Content!;
     }

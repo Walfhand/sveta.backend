@@ -20,4 +20,12 @@ public class DocumentChunk
     public required string Text { get; init; }
 
     [VectorStoreRecordVector(1024)] public ReadOnlyMemory<float> TextEmbedding { get; set; }
+
+    [VectorStoreRecordData] public required string Category1 { get; init; }
+
+    [VectorStoreRecordData] public required string Category2 { get; init; }
+
+    [VectorStoreRecordData] public required decimal ScoreCategory1 { get; init; }
+
+    [VectorStoreRecordData] public required decimal ScoreCategory2 { get; init; }
 }

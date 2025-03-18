@@ -1,6 +1,7 @@
 using Api.Configs.Sk.Options;
 using Api.Features.Chats.Agents;
 using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.Connectors.Postgres;
 
 namespace Api.Configs.Sk;
 
@@ -14,14 +15,15 @@ public static class SkConfig
     public static IServiceCollection AddSk(this IServiceCollection services, IConfiguration configuration)
     {
         services.Configure<SkOptions>(configuration.GetSection(SkOptions.Sk));
+
         var skOptions = configuration.GetSection(SkOptions.Sk).Get<SkOptions>();
 
-        services.AddOpenAIChatCompletion("microsoft/phi-4",
+        services.AddOpenAIChatCompletion("deepseek-ai/DeepSeek-R1-Distill-Qwen-32B",
             new Uri(skOptions!.Uri),
             skOptions.ApiKey,
             serviceId: "business");
 
-        services.AddOpenAIChatCompletion("Qwen/Qwen2.5-Coder-32B-Instruct",
+        services.AddOpenAIChatCompletion("deepseek-ai/DeepSeek-R1",
             new Uri(skOptions!.Uri),
             skOptions.ApiKey,
             serviceId: "code");
@@ -31,7 +33,13 @@ public static class SkConfig
             skOptions.ApiKey,
             serviceId: "decision");
 
-        services.AddRedisVectorStore(skOptions.StoreUri);
+        services.AddOpenAIChatCompletion("microsoft/phi-4",
+            new Uri(skOptions!.Uri),
+            skOptions.ApiKey,
+            serviceId: "classification");
+
+        //services.AddRedisVectorStore(skOptions.StoreUri);
+        services.AddPostgresVectorStore(skOptions.StoreUri, new PostgresVectorStoreOptions { Schema = "rag" });
         services.AddHuggingFaceTextEmbeddingGeneration(new Uri(skOptions.EmbeddingUri));
 
         services.AddSingleton<KernelPluginCollection>(serviceProvider =>
@@ -49,6 +57,7 @@ public static class SkConfig
         services.AddSingleton<OnboardingAgent>();
         services.AddSingleton<CodeAgent>();
         services.AddSingleton<DecisionAgent>();
+        services.AddSingleton<ClassificationAgent>();
         services.AddHttpContextAccessor();
         return services;
     }

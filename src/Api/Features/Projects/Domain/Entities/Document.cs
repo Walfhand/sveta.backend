@@ -14,6 +14,14 @@ public record DocumentId : IdBase
     }
 }
 
+public enum DocumentType
+{
+    Code,
+    Business,
+    TechnicalAnalysis,
+    Documentation
+}
+
 public class Document : Entity<DocumentId>
 {
     private Document()

@@ -10,7 +10,6 @@ using Hellang.Middleware.ProblemDetails;
 using QuickApi.Engine.Web;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Host.UseCustomWolverine(builder.Configuration, Assembly.GetExecutingAssembly());
 builder.Services.AddApplication();
 builder.Services.AddOpenApi();
 builder.Services.AddMinimalEndpoints();
@@ -20,7 +19,7 @@ builder.Services.AddCognitiveServices();
 
 builder.Services.AddCustomDbContext<AppDbContext>();
 builder.Services.AddScoped<IAppDbContextFactory, DbContextFactory>();
-
+builder.Host.UseCustomWolverine(builder.Configuration, Assembly.GetExecutingAssembly());
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment()) app.MapOpenApi();
@@ -29,4 +28,6 @@ app.UseHttpsRedirection();
 app.UseMinimalEndpoints();
 app.UseMigration<AppDbContext>();
 app.UseProblemDetails();
+
+
 app.Run();

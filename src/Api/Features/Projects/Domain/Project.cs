@@ -45,7 +45,7 @@ public class Project : AggregateRoot<ProjectId>
     {
         var document = Document.Create(name, content, contentType);
         _documents.Add(document);
-        AddDomainEvent(new DocumentCreatedEvent(document.Id, document.Name, fileContentExtractor.Extract(content)));
+        AddDomainEvent(new DocumentCreatedEvent(Id, document.Id, document.Name, fileContentExtractor.Extract(content)));
         return document;
     }
 

@@ -15,6 +15,7 @@ public class RagService(IVectorStore vectorStore, ITextEmbeddingGenerationServic
     {
         List<(string key, string value, string link)> results = [];
         var collection = vectorStore.GetCollection<string, DocumentChunk>(projectId.Value.ToString());
+        await collection.CreateCollectionIfNotExistsAsync(ct);
         var textSearch = new VectorStoreTextSearch<DocumentChunk>(collection, embeddingGenerationService);
 
         var searchResults =
@@ -35,7 +36,7 @@ public class RagService(IVectorStore vectorStore, ITextEmbeddingGenerationServic
         {
             chunk.TextEmbedding =
                 await embeddingGenerationService.GenerateEmbeddingAsync(chunk.Text, cancellationToken: ct);
-            await collection.UpsertAsync(chunk, cancellationToken: ct);
+            await collection.UpsertAsync(chunk, ct);
         }
     }
 }
