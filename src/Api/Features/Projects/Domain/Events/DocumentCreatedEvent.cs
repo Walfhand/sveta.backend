@@ -1,5 +1,5 @@
 using Api.Features.Projects.Domain.Entities;
-using Engine.Core.Events;
+using DomainEssentials.Core.Events;
 
 namespace Api.Features.Projects.Domain.Events;
 

@@ -2,7 +2,8 @@ using Api.Features.Projects.Domain.Entities;
 using Api.Features.Projects.Domain.Events;
 using Api.Features.Projects.Domain.ValueObjects;
 using Api.Shared.Files.Extractors.Abstractions;
-using Engine.Core.Models;
+using DomainEssentials.Core.Implementations;
+using DomainEssentials.Core.Keys;
 
 namespace Api.Features.Projects.Domain;
 

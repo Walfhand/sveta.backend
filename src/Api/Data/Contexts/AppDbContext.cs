@@ -1,5 +1,5 @@
 using System.Reflection;
-using Engine.Core.Models;
+using DomainEssentials.Core.Abstractions;
 using Engine.EFCore;
 using Microsoft.EntityFrameworkCore;
 

@@ -1,4 +1,4 @@
-﻿using Engine.Core.Models;
+﻿using DomainEssentials.Core.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 

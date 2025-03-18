@@ -1,5 +1,6 @@
 using System.Net;
-using Engine.Core.Models;
+using DomainEssentials.Core.Implementations;
+using DomainEssentials.Core.Keys;
 
 namespace Engine.Exceptions;
 

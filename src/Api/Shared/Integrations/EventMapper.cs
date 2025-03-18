@@ -1,3 +1,4 @@
+using DomainEssentials.Core.Events;
 using Engine.Core.Events;
 
 namespace Api.Shared.Integrations;

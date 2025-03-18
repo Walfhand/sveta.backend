@@ -9,7 +9,6 @@ using Wolverine.EntityFrameworkCore;
 using Wolverine.ErrorHandling;
 using Wolverine.FluentValidation;
 using Wolverine.Postgresql;
-using IEvent = Engine.Core.Events.IEvent;
 
 namespace Engine.Wolverine;
 
