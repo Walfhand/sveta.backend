@@ -18,12 +18,12 @@ public static class SkConfig
 
         var skOptions = configuration.GetSection(SkOptions.Sk).Get<SkOptions>();
 
-        services.AddOpenAIChatCompletion("deepseek-ai/DeepSeek-R1-Distill-Qwen-32B",
+        services.AddOpenAIChatCompletion("deepseek-ai/DeepSeek-R1-Distill-Llama-70B",
             new Uri(skOptions!.Uri),
             skOptions.ApiKey,
             serviceId: "business");
 
-        services.AddOpenAIChatCompletion("deepseek-ai/DeepSeek-R1",
+        services.AddOpenAIChatCompletion("deepseek-ai/DeepSeek-R1-Distill-Llama-70B",
             new Uri(skOptions!.Uri),
             skOptions.ApiKey,
             serviceId: "code");

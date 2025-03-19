@@ -9,10 +9,13 @@ public static class ChatHistoryBuilder
         string context, string systemPrompt)
     {
         ChatHistory chatHistory = [];
+        var systemMessage = $"""
 
-        chatHistory.AddSystemMessage(context);
-        chatHistory.AddSystemMessage(systemPrompt);
+                             {context}
+                             {systemPrompt}
 
+                             """;
+        chatHistory.AddSystemMessage(systemMessage);
         foreach (var chatMessage in conversation.ChatMessages.OrderBy(x => x.Order))
         {
             var role = chatMessage.Role.ToLowerInvariant() switch

@@ -1,3 +1,4 @@
+using Api.Features.Cognitives.Rag.Search;
 using Api.Features.Cognitives.Rag.Shared.Abstractions;
 using Api.Features.Cognitives.Rag.Shared.Implementations;
 
@@ -9,6 +10,8 @@ public static class Di
     {
         services.AddSingleton<IRagRead, RagService>();
         services.AddSingleton<IRagWrite, RagService>();
+
+        services.AddSingleton<VectorSearchService>();
         return services;
     }
 }

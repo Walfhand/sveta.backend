@@ -1,3 +1,4 @@
+using Api.Features.Cognitives.Rag.Search;
 using Api.Features.Cognitives.Rag.Shared.Abstractions;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
@@ -89,5 +90,18 @@ public class OnboardingAgent(
 
                 Si vous n'avez pas l'information, il faut le dire et ne pas inventer des choses.
                 """;
+    }
+
+    protected override VectorSearchOptions GetOptions()
+    {
+        return new VectorSearchOptions
+        {
+            MaxResults = 100,
+            Category1Filter = "business",
+            Category2Filter = "code",
+            VectorWeight = 0.7f,
+            Category1Weight = 0.2f,
+            Category2Weight = 0.1f
+        };
     }
 }

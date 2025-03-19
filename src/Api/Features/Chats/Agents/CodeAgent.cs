@@ -1,3 +1,4 @@
+using Api.Features.Cognitives.Rag.Search;
 using Api.Features.Cognitives.Rag.Shared.Abstractions;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
@@ -11,7 +12,7 @@ public class CodeAgent(
     : AgentBase(kernel, chatCompletionService, ragRead)
 {
     public override string Description =>
-        "Spécialisé dans l'analyse, la conception, l'implémentation et le débogage de code source";
+        "Spécialisé dans l'analyse du code source, je debug et propose des améliorations de code source, je répond à toute question technique";
 
     protected override string SystemPrompt(string projectName)
     {
@@ -86,5 +87,18 @@ public class CodeAgent(
                 Votre objectif est de fournir une assistance de la plus haute qualité technique, en respectant les contraintes spécifiques du projet et en proposant des solutions élégantes et efficaces.
                 Vous répondrez aux questions qui touche au projet grace au contexte et aux informations fournies.
                 """;
+    }
+
+    protected override VectorSearchOptions GetOptions()
+    {
+        return new VectorSearchOptions
+        {
+            MaxResults = 100,
+            Category1Filter = "code",
+            Category2Filter = "business",
+            VectorWeight = 0.7f,
+            Category1Weight = 0.2f,
+            Category2Weight = 0.1f
+        };
     }
 }

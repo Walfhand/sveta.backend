@@ -1,10 +1,12 @@
+using Api.Features.Cognitives.Rag.Search;
 using Api.Features.Projects.Domain;
 
 namespace Api.Features.Cognitives.Rag.Shared.Abstractions;
 
 public interface IRagRead
 {
-    Task<List<(string key, string value, string link)>> ReadAsync(ProjectId projectId,
+    Task<List<ChunkResult>> ReadAsync(ProjectId projectId,
         string question,
-        CancellationToken ct);
+        CancellationToken ct,
+        VectorSearchOptions? options = null);
 }

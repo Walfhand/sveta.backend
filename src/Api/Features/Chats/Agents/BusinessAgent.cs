@@ -1,3 +1,4 @@
+using Api.Features.Cognitives.Rag.Search;
 using Api.Features.Cognitives.Rag.Shared.Abstractions;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
@@ -92,5 +93,18 @@ public class BusinessAgent(
 
                 Votre objectif est de faciliter la prise de décision, d'améliorer la qualité des livrables et d'assurer l'alignement entre les besoins métier et les solutions techniques, en tenant compte du contexte spécifique de chaque organisation et projet.
                 """;
+    }
+
+    protected override VectorSearchOptions GetOptions()
+    {
+        return new VectorSearchOptions
+        {
+            MaxResults = 100,
+            Category1Filter = "business",
+            Category2Filter = "documentation",
+            VectorWeight = 0.7f,
+            Category1Weight = 0.2f,
+            Category2Weight = 0.1f
+        };
     }
 }

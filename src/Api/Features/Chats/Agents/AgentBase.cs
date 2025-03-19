@@ -1,5 +1,6 @@
 using System.Text;
 using Api.Features.Chats.BuildHistories;
+using Api.Features.Cognitives.Rag.Search;
 using Api.Features.Cognitives.Rag.Shared.Abstractions;
 using Api.Features.Projects.Domain;
 using Api.Features.Projects.Domain.Entities;
@@ -28,16 +29,22 @@ public abstract class AgentBase(Kernel kernel, IChatCompletionService chatComple
 
     private async Task<string> ConstructContext(string question, ProjectId projectId, CancellationToken ct)
     {
-        var results = await ragRead.ReadAsync(projectId, question, ct);
+        var results = await ragRead.ReadAsync(projectId, question, ct, GetOptions());
         var formattedResults = new StringBuilder();
         formattedResults.AppendLine("CONTEXT:");
         formattedResults.AppendLine("-----------------");
 
-        foreach (var grouping in results.GroupBy(x => x.key))
+        foreach (var grouping in results.OrderBy(x => x.TotalScore).GroupBy(x => x.DocumentName))
         {
             formattedResults.AppendLine($"Nom du document: {grouping.Key}");
             formattedResults.AppendLine("Contenu du document:");
-            foreach (var value in grouping.OrderBy(x => x.link)) formattedResults.AppendLine(value.value);
+            foreach (var value in grouping.OrderBy(x => x.ChunkNumber))
+            {
+                formattedResults.AppendLine("chunk: " + value.ChunkNumber);
+                formattedResults.AppendLine("==================================================================");
+                formattedResults.AppendLine(value.Text);
+            }
+
             formattedResults.AppendLine("-----------------");
         }
 
@@ -45,4 +52,5 @@ public abstract class AgentBase(Kernel kernel, IChatCompletionService chatComple
     }
 
     protected abstract string SystemPrompt(string projectName);
+    protected abstract VectorSearchOptions GetOptions();
 }

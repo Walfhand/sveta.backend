@@ -1,29 +1,28 @@
+using Api.Features.Cognitives.Rag.Search;
 using Api.Features.Cognitives.Rag.Shared.Abstractions;
 using Api.Features.Cognitives.Rag.Shared.Chunks.Models;
 using Api.Features.Projects.Domain;
 using Microsoft.Extensions.VectorData;
-using Microsoft.SemanticKernel.Data;
 using Microsoft.SemanticKernel.Embeddings;
 
 namespace Api.Features.Cognitives.Rag.Shared.Implementations;
 #pragma warning disable SKEXP0001
-public class RagService(IVectorStore vectorStore, ITextEmbeddingGenerationService embeddingGenerationService)
+public class RagService(
+    IVectorStore vectorStore,
+    VectorSearchService vectorSearchService,
+    ITextEmbeddingGenerationService embeddingGenerationService)
     : IRagRead, IRagWrite
 {
-    public async Task<List<(string key, string value, string link)>> ReadAsync(ProjectId projectId,
-        string question, CancellationToken ct)
+    public async Task<List<ChunkResult>> ReadAsync(ProjectId projectId, string question, CancellationToken ct,
+        VectorSearchOptions? options)
     {
-        List<(string key, string value, string link)> results = [];
         var collection = vectorStore.GetCollection<string, DocumentChunk>(projectId.Value.ToString());
         await collection.CreateCollectionIfNotExistsAsync(ct);
-        var textSearch = new VectorStoreTextSearch<DocumentChunk>(collection, embeddingGenerationService);
 
-        var searchResults =
-            await textSearch.GetTextSearchResultsAsync(question,
-                new TextSearchOptions { Top = 10 }, ct);
+        var inputEmbedding = await embeddingGenerationService.GenerateEmbeddingAsync(question, cancellationToken: ct);
+        var results =
+            await vectorSearchService.HybridVectorSearch(inputEmbedding.ToArray(), collection.CollectionName, options);
 
-        await foreach (var result in searchResults.Results.WithCancellation(ct))
-            results.Add((result.Name!, result.Value, result.Link!));
         return results;
     }
 
