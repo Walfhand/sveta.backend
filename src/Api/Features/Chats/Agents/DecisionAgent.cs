@@ -1,5 +1,3 @@
-using Api.Features.Projects.Domain;
-using Api.Features.Projects.Domain.Entities;
 using Microsoft.SemanticKernel.ChatCompletion;
 
 namespace Api.Features.Chats.Agents;
@@ -20,22 +18,15 @@ public class DecisionAgent(
         };
     }
 
-    public async Task<string> RouteAndAnswerAsync(
-        string question,
-        ProjectId projectId,
-        string projectName,
-        Conversation conversation,
-        CancellationToken ct)
+    public async Task<IAgent> GetBestAgentAsync(string question, CancellationToken ct)
     {
         var agentName = await DetermineAgentAsync(question, ct);
         return agentName switch
         {
-            nameof(BusinessAgent) =>
-                await businessAgent.AnswerAsync(projectId, projectName, question, conversation, ct),
-            nameof(OnboardingAgent) => await onboardingAgent.AnswerAsync(projectId, projectName, question, conversation,
-                ct),
-            nameof(CodeAgent) => await codeAgent.AnswerAsync(projectId, projectName, question, conversation, ct),
-            _ => throw new ArgumentOutOfRangeException()
+            nameof(BusinessAgent) => businessAgent,
+            nameof(OnboardingAgent) => onboardingAgent,
+            nameof(CodeAgent) => codeAgent,
+            _ => throw new ArgumentOutOfRangeException(agentName)
         };
     }
 

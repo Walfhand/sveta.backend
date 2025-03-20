@@ -42,8 +42,9 @@ public class AskRequestHandler(IAppDbContextFactory dbContextFactory, IHttpConte
             .FirstAsync(x => x.Id == request.ProjectId, ct);
 
         var conversation = project.GetConversation(new ConversationId(request.ConversationId));
+        var bestAgent = await decisionAgent.GetBestAgentAsync(request.Body.Question, ct);
         var response =
-            await decisionAgent.RouteAndAnswerAsync(request.Body.Question, project.Id, project.Name, conversation, ct);
+            await bestAgent.AnswerAsync(project.Id, project.Name, request.Body.Question, conversation, ct);
 
         conversation.AddChatMessage("user", request.Body.Question);
         conversation.AddChatMessage("assistant", response);
